@@ -4,13 +4,13 @@ This is an electron app for unifi protect liveview build by Sebastian Loer. This
 
 This app allows you to view your liveview from a simple app with automatic login. Just configure your unifi protect address and credentials and the app will automaticly login and present you the liveview you selected.
 
-![Screenshot #1 Configuration](screenshots/liveview-v3.png)
+![Screenshot #1 Configuration]([screenshots](https://raw.githubusercontent.com/digital195/unifi-protect-viewer/master/screenshots/liveview-v3.png)
 
 ## Configuration
 
 Just start the application and enter your credentials and url to your unifi protect instance.
 
-![Screenshot #1 Configuration](screenshots/configuration.png)
+![Screenshot #1 Configuration](https://raw.githubusercontent.com/digital195/unifi-protect-viewer/master/screenshots/configuration.png)
 
 Example Link: `https://192.168.1.1/protect/liveview/635e65bd000c1c0387005a5f` (Version 2)
 
@@ -50,7 +50,7 @@ After configuration the app will automaticly start the liveview after startup. I
 
 Sadly google announced that there will be no support for chrome apps on windows, mac or linux after december 2022.
 
-![Screenshot #1 Chromeapp](screenshots/chrome-app.png)
+![Screenshot #1 Chromeapp]([screenshots](https://raw.githubusercontent.com/digital195/unifi-protect-viewer/master/screenshots/chrome-app.png)
 
 The Chrome app for Unifi Protect Viewer is based up on a version of remcotjeerdsma. The Version is fully functional, you can find instructions and the sourcecode under the following link.
 
