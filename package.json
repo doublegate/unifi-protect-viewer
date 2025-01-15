@@ -1,7 +1,7 @@
 {
   "name": "unifi-protect-viewer",
   "productName": "UniFi Protect Viewer",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Electron app for UniFi Protect",
   "main": "main.js",
   "scripts": {
@@ -30,14 +30,14 @@
     "protect",
     "viewer"
   ],
-  "author": "JD Lien",
+  "author": "DoubleGate (Luke Parobek)",
   "license": "",
   "devDependencies": {
     "archiver": "^7.0.1",
-    "electron": "^33.0.1",
-    "electron-packager": "17.1.2",
+    "electron": "^34.0.0",
+    "electron-packager": "^17.1.2",
     "electron-reloader": "^1.2.3",
-    "glob": "^10.4.5",
+    "glob": "^11.0.1",
     "prettier": "^3.3.3"
   },
   "dependencies": {
