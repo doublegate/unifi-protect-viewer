@@ -1,48 +1,57 @@
-# UniFi Protect Viewer
+# UnifiProtect Viewer Electron App
 
-This Electron app is a wrapper for UniFi Protect that gives a clean interface that maximizes the live view and automatically logs you in. When you first launch the app, you'll be prompted to enter a URL for your Protect console and your Ubiquiti credentials (or, if connecting directly to a console, you can also use a local account). The URL will typically be something like `https://192.168.1.1/protect`, although if the site you're accessing is not on your network, you may need to use your Internet IP address or hostname.
+This is an electron app for unifi protect liveview build by Sebastian Loer. This version was testet with unifi protect v4.0.21 (Version 2.x, Version 3.x is also compatible) running on an UDM-Pro. 
 
-The app will then automatically log in and present you with the live view you selected.
+This app allows you to view your liveview from a simple app with automatic login. Just configure your unifi protect address and credentials and the app will automaticly login and present you the liveview you selected.
 
-## Credits
+![Screenshot #1 Configuration](screenshots/liveview-v3.png)
 
-This application is based on [UniFi Protect Viewer](https://github.com/digital195/unifi-protect-viewer) by Sebastian Loer, but has been heavily modified. It now only works with Protect v4/5. The chief difference is that this version is designed to allow you to access the Protect application as you normally would without any features removed. In contrast, the original was intended as a kiosk application that isn't intended to be interacted with beyond viewing the live view.
+## Configuration
 
-This version removes fewer of the features/elements of UniFi Protect than the original, allowing navigation between different parts of the app. The following features have also been added:
+Just start the application and enter your credentials and url to your unifi protect instance.
 
-- You can toggle navigation/header by pressing `Escape`
-- A button shows, allowing you to return to the dashboard view after you leave it
-- The configuration and error pages have been redesigned
-- The latest version of Electron is now used (v33)
+![Screenshot #1 Configuration](screenshots/configuration.png)
+
+Example Link: `https://192.168.1.1/protect/liveview/635e65bd000c1c0387005a5f` (Version 2)
+
+Example Link: `https://192.168.1.1/protect/dashboard/635e65bd000c1c0387005a5f` (Version 3 & 4)
+
+The Link needs to be set to the IP-address of your Unifi Protect installation. You can simply copy the link from your browser while viewing the liveview on your unifi protect instance.
 
 ## Installation
 
-You can build this app yourself by cloning or downloading this repository.
+Ether you can download this application from github or build it yourself with this repository.
 
-Copy the finished build to a location of your choice, then start the application from that directory.
+Copy the finished build to a location of your choice. Then you can start the application from this directory.
 
 ## Building
 
-Install all dependencies with `npm install`. After this, you can build the application yourself for the platform you need.
+Install all dependencies with the `npm install` or `npm i` command. After this you can build the application yourself for your needed platform.
 
-For some platforms, there are scripts inside the package.json.
+For some platforms there are scripts inside the package.json.
+ 
+`npm run build:ia32:windows`
 
-`npm run build:windows:ia32:windows`
+`npm run build:x64:macos`
 
-`npm run build:macos:x64`
+`npm run build:arm64:macos`
 
-`npm run build:macos:arm64`
-
-`npm run build:linux:x64`
-
-## Known Issues
-
-Currently, enhanced codec (h.265) support does not appear to work in Windows (likely due to licensing limitations in Electron). Let me know if you have any ideas on how to fix this — one potential solution is to use a fork of Electron with HEVC support like https://github.com/AAAhs/electron-hevc
+`npm run build:x64:linux`
 
 ## Usage
 
-After configuration, the app will automatically start the live view upon startup. If you want to change the configuration, you can press `F10` to reset all settings and restart the configuration process.
+After configuration the app will automaticly start the liveview after startup. If you want to change the configuration or when you misspell your credentials you can press `F10` to reset all settings and restart the configuration process.
 
-- Escape: Toggle Navigation
-- F9: Restart
-- F10: Restart & Reset
+- F9 Restart
+- F10 Restart & Reset
+- F11 Fullscreen (Electron, no Unifi Protect Fullscreen)
+
+## Chrome App
+
+Sadly google announced that there will be no support for chrome apps on windows, mac or linux after december 2022.
+
+![Screenshot #1 Chromeapp](screenshots/chrome-app.png)
+
+The Chrome app for Unifi Protect Viewer is based up on a version of remcotjeerdsma. The Version is fully functional, you can find instructions and the sourcecode under the following link.
+
+https://github.com/digital195/unifi-protect-viewer/tree/caaec3523361f5494338b333426cc1af5a48707a

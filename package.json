@@ -1,8 +1,7 @@
 {
   "name": "unifi-protect-viewer",
-  "productName": "UniFi Protect Viewer",
-  "version": "1.0.5",
-  "description": "Electron app for UniFi Protect",
+  "version": "1.0.6",
+  "description": "Electron app for Unifi Protect Live View.",
   "main": "main.js",
   "scripts": {
     "start": "electron --ignore=builds .",
@@ -34,13 +33,11 @@
   "license": "",
   "devDependencies": {
     "archiver": "^7.0.1",
-    "electron": "^34.0.0",
-    "electron-packager": "^17.1.2",
-    "electron-reloader": "^1.2.3",
-    "glob": "^11.0.1",
-    "prettier": "^3.3.3"
+    "electron": "34.0.0",
+    "electron-packager": "17.1.2",
+    "electron-reloader": "1.2.3"
   },
   "dependencies": {
-    "electron-store": "^10.0.0"
+    "electron-store": "10.0.0"
   }
 }
