@@ -59,8 +59,8 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           tag: ${{ github.ref_name }}
           # Optionally create a release from that tag
-          releaseName: "Release ${{ github.ref_name }}"
-          assets: |
+          name: "Release ${{ github.ref_name }}"
+          artifacts: |
             builds/**/*.exe
           # Adjust as needed if your .exe is named differently
           body: |
