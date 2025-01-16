@@ -50,18 +50,18 @@ jobs:
         with:
           name: windows-build-artifacts
 
+      - name: Set Release Tag Dynamically
+        run: |
+          TAG_NAME=${GITHUB_REF##*/}  # Extract tag from the ref
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+
       - name: Create GitHub Release
-        # This step attaches the .exe files to the new GitHub release
-        # If you want it to only happen on 'push tags'
-        if: startsWith(github.ref, 'refs/tags/')
-        uses: ncipollo/release-action@v1
+        uses: softprops/action-gh-release@v1
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag: ${{ github.ref_name }}
-          # Optionally create a release from that tag
-          name: "Release ${{ github.ref_name }}"
-          artifacts: |
-            builds/**/*.exe
-          # Adjust as needed if your .exe is named differently
+          files: builds/**/*.exe
+          tag_name: ${{ env.TAG_NAME }}
+          name: Release ${{ env.TAG_NAME }}
           body: |
-            Automated Release for Windows Executable (x64).
+            Automated Release for Windows Executable (x64) - ver. ${{ env.TAG_NAME }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
