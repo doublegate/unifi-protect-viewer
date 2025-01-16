@@ -4,6 +4,7 @@ on:
   # Build when a new tag is pushed (adjust as needed).
   push:
     tags:
+      - '1*'
       - 'v*'
   # Allows manual triggering from the Actions tab
   workflow_dispatch:
