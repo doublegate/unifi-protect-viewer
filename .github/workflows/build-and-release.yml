@@ -1,67 +1,73 @@
 name: Build and Release (Windows x64)
 
 on:
-  # Build when a new tag is pushed (adjust as needed).
   push:
     tags:
       - '1*'
       - 'v*'
-  # Allows manual triggering from the Actions tab
   workflow_dispatch:
 
 jobs:
-  build-windows:
+  build-and-release:
     runs-on: windows-latest
 
     steps:
-      - name: Check-Out Repo
+      - name: Check Out Repository
         uses: actions/checkout@v3
 
-      - name: Set-Up Node
+      - name: Set Up Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '20'  # or whichever version you need
+          node-version: '20'
 
       - name: Install Dependencies
-        run: npm ci   # or 'npm install' if you prefer
+        run: npm ci
 
-      - name: Build
-        run: npm run build:windows:x64  # or your build steps to create Windows .exe
+      - name: Build Project
+        run: npm run build:windows:x64  # Replace with your actual build command
 
-      - name: Archive Artifacts
-        # Save final .exe or .zip inside the workspace
-        # Adjust the path to where electron-packager/electron-builder
-        # actually puts the .exe
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-build-artifacts
-          path: |
-            builds/**/*
-            # If your .exe is built to 'builds/<...>.exe', for example
-
-  release:
-    # Only run if the build job completes successfully
-    needs: build-windows
-    runs-on: windows-latest
-
-    steps:
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: windows-build-artifacts
-
-      - name: Set Release Tag Dynamically
+      - name: Archive Build Outputs
         run: |
-          TAG_NAME=${GITHUB_REF##*/}  # Extract tag from the ref
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          mkdir -p artifacts
+          Compress-Archive -Path builds\* -DestinationPath artifacts/Windows_x64-Build.zip
+        shell: pwsh
+
+      - name: Extract Release Tag
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -like 'refs/tags/*') {
+            $TAG_NAME = $env:GITHUB_REF -replace '^refs/tags/', ''
+            Write-Host "Extracted TAG_NAME: $TAG_NAME"
+            echo "TAG_NAME=$TAG_NAME" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+          } else {
+            Write-Error "GITHUB_REF does not contain a valid tag. Received: $env:GITHUB_REF"
+            exit 1
+          }
+
+      - name: Rename ZIP File with Version
+        shell: pwsh
+        run: |
+          $NewFileName = "artifacts/Windows_x64-ver.$env:TAG_NAME_Build.zip"
+          Rename-Item -Path "artifacts/Windows_x64-Build.zip" -NewName $NewFileName
+          echo "VERSIONED_ZIP=$NewFileName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+
+      - name: Confirm Versioned ZIP File Exists
+        shell: pwsh
+        run: |
+          if (Test-Path -Path "./artifacts/Windows_x64-ver.$env:TAG_NAME_Build.zip") {
+            Write-Host "ZIP file exists: ./artifacts/Windows_x64-ver.$env:TAG_NAME_Build.zip"
+          } else {
+            Write-Error "Versioned ZIP file not found."
+            exit 1
+          }
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: builds/**/*.exe
+          files: ${{ env.VERSIONED_ZIP }}  # Use dynamically named ZIP file
           tag_name: ${{ env.TAG_NAME }}
-          name: Release ${{ env.TAG_NAME }}
+          name: Unifi Protect Viewer ${{ env.TAG_NAME }}
           body: |
-            Automated Release for Windows Executable (x64) - ver. ${{ env.TAG_NAME }}
+            Automated Release for Windows Archive (x64) - version ${{ env.TAG_NAME }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
