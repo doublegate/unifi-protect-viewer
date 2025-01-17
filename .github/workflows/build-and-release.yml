@@ -1,10 +1,10 @@
 name: Build and Release (Windows x64)
 
 on:
-  push:
-    tags:
-      - '1*'
-      - 'v*'
+#  push:
+#    tags:
+#      - '1*'
+#      - 'v*'
   workflow_dispatch:
 
 jobs:
