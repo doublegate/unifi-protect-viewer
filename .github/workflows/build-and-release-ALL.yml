@@ -3,13 +3,13 @@ name: Build and Release (All Platforms)
 on:
   push:
     tags:
-      - '1*'
       - 'v*'
+      - '1.*'
   workflow_dispatch:
 
 jobs:
   build-and-release:
-    runs-on: ubuntu-latest  # Use a Linux runner for compatibility with all platforms
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check Out Repository
@@ -24,18 +24,38 @@ jobs:
         run: npm ci
 
       - name: Build All Platforms
-        run: npm run build  # This runs the "build" script in your package.json
+        run: npm run build
+
+      - name: Debug: List Build Outputs
+        shell: pwsh
+        run: |
+          Write-Host "Listing files in builds directory:"
+          Get-ChildItem -Path builds -Recurse
+
+      - name: Extract Release Tag
+        shell: pwsh
+        run: |
+          if ($env:GITHUB_REF -like 'refs/tags/*') {
+            $TagName = $env:GITHUB_REF -replace '^refs/tags/', ''
+            Write-Host "Extracted TAG_NAME: $TagName"
+            echo "TAG_NAME=$TagName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
+          } else {
+            Write-Error "GITHUB_REF does not contain a valid tag. Received: $env:GITHUB_REF"
+            exit 1
+          }
 
       - name: Archive Build Outputs
         shell: pwsh
         run: |
-          # Define version tag
-          $TagName = $env:GITHUB_REF -replace '^refs/tags/', ''
-          
+          $TagName = $env:TAG_NAME
+
+          # Ensure artifacts directory exists
+          mkdir -p artifacts
+
           # Archive Windows builds
-          Compress-Archive -Path "builds\\*win32-ia32*" -DestinationPath "artifacts/Windows_ia32-v$TagName.zip"
-          Compress-Archive -Path "builds\\*win32-x64*" -DestinationPath "artifacts/Windows_x64-v$TagName.zip"
-          Compress-Archive -Path "builds\\*win32-arm64*" -DestinationPath "artifacts/Windows_arm64-v$TagName.zip"
+          Compress-Archive -Path "builds/*win32-ia32*" -DestinationPath "artifacts/Windows_ia32-v$TagName.zip"
+          Compress-Archive -Path "builds/*win32-x64*" -DestinationPath "artifacts/Windows_x64-v$TagName.zip"
+          Compress-Archive -Path "builds/*win32-arm64*" -DestinationPath "artifacts/Windows_arm64-v$TagName.zip"
 
           # Archive macOS builds
           Compress-Archive -Path "builds/*darwin-x64*" -DestinationPath "artifacts/MacOS_x64-v$TagName.zip"
@@ -44,28 +64,16 @@ jobs:
           # Archive Linux builds
           Compress-Archive -Path "builds/*linux-x64*" -DestinationPath "artifacts/Linux_x64-v$TagName.zip"
 
-      - name: Debug Step -- Confirm Artifacts
+      - name: Debug: Confirm Artifacts
         shell: pwsh
         run: |
           Write-Host "Listing files in artifacts directory:"
-          Get-ChildItem -Path ./artifacts -Recurse
-
-      - name: Extract Release Tag
-        shell: pwsh
-        run: |
-          if ($env:GITHUB_REF -like 'refs/tags/*') {
-            $TAG_NAME = $env:GITHUB_REF -replace '^refs/tags/', ''
-            Write-Host "Extracted TAG_NAME: $TAG_NAME"
-            echo "TAG_NAME=$TAG_NAME" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
-          } else {
-            Write-Error "GITHUB_REF does not contain a valid tag. Received: $env:GITHUB_REF"
-            exit 1
-          }
+          Get-ChildItem -Path artifacts -Recurse
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: artifacts/*.zip  # Upload all generated .zip files
+          files: artifacts/*.zip
           tag_name: ${{ env.TAG_NAME }}
           name: Unifi Protect Viewer ${{ env.TAG_NAME }}
           body: |
