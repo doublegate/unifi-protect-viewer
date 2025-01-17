@@ -29,8 +29,18 @@ jobs:
       - name: Archive Build Outputs
         run: |
           mkdir -p artifacts
-          Compress-Archive -Path builds\* -DestinationPath artifacts/Windows_x64-Build.zip
+          Compress-Archive -Path builds\* -DestinationPath artifacts\Windows_x64-Build.zip
         shell: pwsh
+
+      - name: Debug Step -- Confirm ZIP File Exists
+        shell: pwsh
+        run: |
+          if (Test-Path -Path ./artifacts/Windows_x64-Build.zip) {
+            Write-Host "ZIP file exists at ./artifacts/Windows_x64-Build.zip"
+          } else {
+            Write-Error "ZIP file not found at ./artifacts/Windows_x64-Build.zip"
+            exit 1
+          }
 
       - name: Extract Release Tag
         shell: pwsh
@@ -44,27 +54,10 @@ jobs:
             exit 1
           }
 
-      - name: Rename ZIP File with Version
-        shell: pwsh
-        run: |
-          $NewFileName = "artifacts/Windows_x64-ver.$env:TAG_NAME_Build.zip"
-          Rename-Item -Path "artifacts/Windows_x64-Build.zip" -NewName $NewFileName
-          echo "VERSIONED_ZIP=$NewFileName" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8
-
-      - name: Confirm Versioned ZIP File Exists
-        shell: pwsh
-        run: |
-          if (Test-Path -Path "./artifacts/Windows_x64-ver.$env:TAG_NAME_Build.zip") {
-            Write-Host "ZIP file exists: ./artifacts/Windows_x64-ver.$env:TAG_NAME_Build.zip"
-          } else {
-            Write-Error "Versioned ZIP file not found."
-            exit 1
-          }
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: ${{ env.VERSIONED_ZIP }}  # Use dynamically named ZIP file
+          files: artifacts/Windows_x64-Build.zip  # Upload the .zip file
           tag_name: ${{ env.TAG_NAME }}
           name: Unifi Protect Viewer ${{ env.TAG_NAME }}
           body: |
