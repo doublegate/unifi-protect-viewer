@@ -26,7 +26,7 @@ jobs:
       - name: Build All Platforms
         run: npm run build
 
-      - name: Debug: List Build Outputs
+      - name: Debug Step -- List Build Outputs
         shell: pwsh
         run: |
           Write-Host "Listing files in builds directory:"
@@ -64,7 +64,7 @@ jobs:
           # Archive Linux builds
           Compress-Archive -Path "builds/*linux-x64*" -DestinationPath "artifacts/Linux_x64-v$TagName.zip"
 
-      - name: Debug: Confirm Artifacts
+      - name: Debug Step -- Confirm Artifacts
         shell: pwsh
         run: |
           Write-Host "Listing files in artifacts directory:"
