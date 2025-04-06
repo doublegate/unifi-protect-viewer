@@ -5,8 +5,10 @@
  * a dedicated viewer for UniFi Protect camera systems. It handles the creation
  * of the application window, configuration persistence, and browser spoofing.
  * 
+ * Version: 1.1 - See Commit Changelog for New Features / Fixes
+ * 
  * @author Original: DoubleGate (Luke Parobek)
- * @author Improved: Claude
+ * @author Improved: Claude 3.7 Sonnet
  */
 
 // Modules to control application life and create native browser window
