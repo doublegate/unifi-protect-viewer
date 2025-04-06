@@ -1,6 +1,6 @@
 # UnifiProtect Viewer Electron App
 
-This is an electron app for unifi protect liveview build by DoubleGate (Luke Parobek). This version was testet with unifi protect v4.0.21 (Version 2.x, Version 3.x is also compatible) running on an UDM-Pro. 
+This is an electron app for unifi protect liveview build by DoubleGate (Luke Parobek). This version was testet with unifi protect v4.0.21 (Version 2.x, Version 3.x is also compatible) running on an UDM-Pro.
 
 This app allows you to view your liveview from a simple app with automatic login. Just configure your unifi protect address and credentials and the app will automaticly login and present you the liveview you selected.
 
@@ -29,7 +29,7 @@ Copy the finished build to a location of your choice. Then you can start the app
 Install all dependencies with the `npm install` or `npm i` command. After this you can build the application yourself for your needed platform.
 
 For some platforms there are scripts inside the package.json.
- 
+
 `npm run build:ia32:windows`
 
 `npm run build:x64:macos`
@@ -54,4 +54,4 @@ Sadly google announced that there will be no support for chrome apps on windows,
 
 The Chrome app for Unifi Protect Viewer is based up on a version of remcotjeerdsma. The Version is fully functional, you can find instructions and the sourcecode under the following link.
 
-https://github.com/digital195/unifi-protect-viewer/tree/caaec3523361f5494338b333426cc1af5a48707a
+<https://github.com/digital195/unifi-protect-viewer/tree/caaec3523361f5494338b333426cc1af5a48707a>

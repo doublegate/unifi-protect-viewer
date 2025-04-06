@@ -1,129 +1,143 @@
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>UniFi Protect Viewer Configuration</title>
-
-    <link rel="stylesheet" href="../../src/css/styles.css" />
-  </head>
-
-  <body>
-    <main>
-      <div class="logo">
-        <img src="../../src/img/512.png" alt="logo">
-      </div>
-
-      <div>
-        <h1 class="heading text-center">UniFi Protect Viewer</h1>
-      </div>
-
-      <form action="javascript:void(0)">
-        <div class="group">
-          <label for="url">UniFi Site URL</label>
-          <input id="url" name="url" placeholder="https://192.168.1.1/protect/" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniFi Protect Viewer - Configuration</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .container {
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            padding: 30px;
+            width: 400px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            width: 120px;
+            height: 120px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 400;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #cccccc;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            background-color: #333333;
+            border: 1px solid #444444;
+            border-radius: 4px;
+            color: #ffffff;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        input:focus {
+            outline: none;
+            border-color: #0078d7;
+        }
+        .hint {
+            font-size: 12px;
+            color: #999999;
+            margin-top: 4px;
+        }
+        button {
+            background-color: #0078d7;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #0063b1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="../img/128.png" alt="UniFi Protect Viewer">
         </div>
-
-        <div class="group">
-          <label for="username">Username</label>
-          <input id="username" name="username" />
-        </div>
-
-        <div class="group">
-          <label for="password">Password</label>
-          <input id="password" type="password" name="password" />
-        </div>
-
-        <div id="error" class="group error" style="display: none"></div>
-
-        <div class="group">
-          <button onclick="save()">Save Configuration</button>
-        </div>
-      </form>
-
-      <div style="margin-top:10px;">
-        <h2 style="font-size:20px; text-align: center;">Hotkeys</h2>
-        <div style="border-radius: 8px; padding: 12px; background-color: #8882; margin-bottom: 16px;">
-          <div class="hotkey"><key>Esc</key><span>Toggle Navigation</span></div>
-          <div class="hotkey"><key id="fullscreenKey">F11</key><span>Fullscreen</span></div>
-          <div class="hotkey"><key>F9</key><span>Restart</span></div>
-          <div class="hotkey"><key>F10</key><span>Log Out</span></div>
-        </div>
-      </div>
-    </main>
-
+        <h1>UniFi Protect Viewer Configuration</h1>
+        <form id="config-form">
+            <div class="form-group">
+                <label for="url">UniFi Protect URL</label>
+                <input type="text" id="url" name="url" placeholder="https://192.168.1.1/protect/dashboard/XXXXXX" required>
+                <div class="hint">Copy the URL from your browser when viewing the liveview on your UniFi Protect instance.</div>
+            </div>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" placeholder="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" placeholder="password" required>
+            </div>
+            <button type="submit">Save Configuration</button>
+        </form>
+    </div>
     <script>
-      // Set the appropriate key for fullscreen if the user is on macOS
-      if (navigator.platform.toUpperCase().indexOf('MAC') >= 0) {
-        document.getElementById('fullscreenKey').innerText = '⌃⌘F'
-      }
-
-      const save = () => {
-        // Field definitions with validation rules
-        const fields = {
-          url: {
-            element: document.getElementById('url'),
-            errorMessage: 'The URL is required.',
-            validate: (value) => {
-              if (!value) return 'The URL is required.'
-              try {
-                new URL(value)
-                return null
-              } catch {
-                return 'Please enter a valid URL.'
-              }
-            }
-          },
-          username: {
-            element: document.getElementById('username'),
-            errorMessage: 'The username is required.',
-            validate: (value) => !value ? 'The username is required.' : null
-          },
-          password: {
-            element: document.getElementById('password'),
-            errorMessage: 'The password is required.',
-            validate: (value) => {
-              if (!value) return 'The password is required.'
-              return null
-            }
-          }
-        }
-
-        const errorContainer = document.getElementById('error')
-
-        // Clear previous errors
-        errorContainer.style.display = 'none'
-        errorContainer.innerHTML = ''
-
-        // Collect form data and validate
-        const formData = {}
-        const errors = []
-
-        for (const [fieldName, field] of Object.entries(fields)) {
-          const value = field.element.value.trim()
-          formData[fieldName] = value
-
-          const error = field.validate(value)
-          if (error) {
-            errors.push(error)
-          }
-        }
-
-        // Handle validation errors
-        if (errors.length > 0) {
-          errorContainer.style.display = 'block'
-          errorContainer.innerHTML = errors
-            .map(error => `<div class="error-item">${error}</div>`)
-            .join('')
-          return
-        }
-
-        // If no errors, save configuration and restart
-        try {
-          window.electronAPI.configSave(formData)
-          window.electronAPI.restart()
-        } catch (error) {
-          errorContainer.style.display = 'block'
-          errorContainer.innerHTML = `<div class="error-item">Failed to save configuration: ${error.message}</div>`
-        }
-      }
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('config-form');
+            
+            // Try to load existing config
+            window.electronAPI.configLoad().then(config => {
+                if (config) {
+                    document.getElementById('url').value = config.url || '';
+                    document.getElementById('username').value = config.username || '';
+                    document.getElementById('password').value = config.password || '';
+                }
+            }).catch(err => {
+                console.error('Failed to load config:', err);
+            });
+            
+            // Handle form submission
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const config = {
+                    url: document.getElementById('url').value,
+                    username: document.getElementById('username').value,
+                    password: document.getElementById('password').value
+                };
+                
+                window.electronAPI.configSave(config);
+                window.electronAPI.restart();
+            });
+        });
     </script>
-  </body>
+</body>
 </html>
